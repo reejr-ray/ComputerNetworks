@@ -20,9 +20,9 @@ Name: Jose
 SID: 91744100
 Github Username:
 """
-name = "" # TODO: your name
-SID = 000000000 # TODO: your student id
-git_username = "" # TODO: your github username
+name = "Raymond Rees Jr" # TODO: your name
+SID = 918690921 # TODO: your student id
+git_username = "landsoul" # TODO: your github username
 print(name)
 print(SID)
 print(git_username)
@@ -42,7 +42,15 @@ Result is 1002
 """
 print("Problem 1 ********************") # problem header (don't modify)
 # TODO: your code here
-
+num1= input('Enter the first integer: ')
+num2 = input("Enter the second integer: ")
+num1 = int(num1)
+num2 = int(num2)
+product1_2 = num1*num2
+if(product1_2 > 500):
+	print(str(num1 + num2))
+else:
+	print(str(product1_2))
 
 ########################## Problem 2: String Processing ##############################################################
 """
@@ -57,7 +65,14 @@ print("Problem 2 ********************") # problem header (don't modify)
 myString = "Alice and Bob go to the same school. They learned today in class how to treat a lice" \
            "infestation, and Alice found the lecture really interesting"
 # TODO: your code here
+counter = 0
+keyword = "Alice"
+splits  = myString.split()
+for split in splits:
+	if split == keyword:
+		counter += 1
 
+print(keyword + " appeared %s times." % (counter))
 
 
 ########################## Problem 3: Loops ############################################################################
@@ -70,7 +85,12 @@ Outputs: 5, 15, 34, 56, 120, 178, 190.
 print("Problem 3 ********************") # problem header (don't modify)
 numbers = [5, 10, 24, 32, 88, 90, 100]
 # TODO: your code here
-
+output = list()
+prev = 0
+for num in numbers:
+	output.append(prev + num)
+	prev = num
+print(output)
 ########################## Problem 4: Functions/Methods/Lists ##########################################################
 """
 Create the method mergeOdds(l1, l2) which takes two unordered lists as parameters, and returns a new list with all the 
@@ -82,9 +102,18 @@ print("Problem 4 ********************") # problem header (don't modify)
 # function skeleton
 def merge_odds(l1, l2):
     odds = []
-    # TODO: your code here
+    # iterate through the lists and grab only odd numbers
+    for i in l1:
+    	if (i % 2) != 0:
+    		odds.append(i)
+    for i in l2:
+    	if (i % 2) != 0:
+    		odds.append(i)
+    #odds now needs to be sorted
+    odds.sort()
+
     return odds
-l1 = [2,1,5,7,9]
+l1 = [2,1,5,7,9,-6,23,4,1,-1,1,-1,2,-3,-9,0]
 l2 = [32,33,13]
 odds = merge_odds(l1, l2)
 print(odds)
@@ -100,9 +129,28 @@ print("Problem 5 ********************") # problem header
 # function skeleton
 def merge_odds(l1, l2):
     odds = {}
-    # TODO: your code here
+    # populate the dictionary's indicies with the longest list --
+    count = 0 # reset the counter
+    for i in l1: # put all relavent items from l1 into odds
+    	if (i % 2) != 0:
+    		if odds.get(count)==None:
+	    		odds[count] = list()
+	    		odds[count].append(i)
+	    	else:
+	    		odds[count].append(i)
+	    	count += 1
+	    		
+    count = 0 # reset the counter
+    for i in l2: # put all relavent items from l1 into odds
+    	if (i % 2) != 0:
+    		if odds.get(count)==None:
+	    		odds[count] = list()
+	    		odds[count].append(i)
+	    	else:
+	    		odds[count].append(i)
+	    	count += 1
     return odds
-l1 = [2,1,5,7,9]
-l2 = [32,33,13]
+l1 = [2,1,5,7,9,-6,23,4,1,-1,1,-1,2,-3,-9,0]
+l2 = [32,33,13,11,22,33,56,27,39,55]
 odds = merge_odds(l1, l2)
 print(odds)
