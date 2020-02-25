@@ -1,6 +1,11 @@
 # CSC645 Spring 2020 Computer Networks
 Welcome to Computer Networks!. Please modify this README file with the following info: 
 1. Your name, and student id here
+
+Name: Raymond Rees Jr.
+
+Student ID: 918690921
+
 2. Update this table of assignments. Set to done after one of the assignments is completed:
 
 | Assignment               | Completed     |
