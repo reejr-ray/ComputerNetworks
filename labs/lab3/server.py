@@ -29,7 +29,7 @@ class Server(object):
     """
     MAX_NUM_CONN = 10 # keeps 10 clients in queue
 
-    def __init__(self, host="127.0.0.1", port = 12000):
+    def __init__(self, host="127.0.0.1", port = 5112):
         """
         Class constructor
         :param host: by default localhost. Note that '0.0.0.0' takes LAN ip address.
@@ -37,14 +37,14 @@ class Server(object):
         """
         self.host = host
         self.port = port
-        self.serversocket = None # TODO: create the server socket
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # TODO: create the server socket
 
     def _bind(self):
         """
         # TODO: bind host and port to this server socket
         :return: VOID
         """
-        pass #remove this line after implemented.
+        self.serversocket.bind((self.host, self.port))
 
     def _listen(self):
         """
@@ -54,9 +54,13 @@ class Server(object):
         """
         try:
             self._bind()
-            # your code here
+            print("Bind succeeded.")
+            self.serversocket.listen(self.MAX_NUM_CONN)
+            print("Server is listening at %s/%d" % (self.host, self.port))
         except:
             self.serversocket.close()
+            print("closing socket. failure to listen.")
+            return None
 
     def _handler(self, clienthandler):
         """
@@ -65,25 +69,46 @@ class Server(object):
         :return:
         """
         while True:
-             # TODO: receive data from client
-             # TODO: if no data, break the loop
-             # TODO: Otherwise, send acknowledge to client. (i.e a message saying 'server got the data
-             pass  # remove this line after implemented.
+            # TODO: receive data from client
+            # TODO: if no data, break the loop
+            # TODO: Otherwise, send acknowledge to client. (i.e a message saying 'server got the data
+            try:
+                client_data = self.receive(clienthandler)
+                if not client_data:
+                    break
+                data = {'data': "The server got the data."}
+                self.send(clienthandler, data)
+                student_name = client_data['student_name']
+                github_user = client_data['github_username']
+                sid = client_data['sid']
+                print("Student ", student_name, " has connected to the server.")
+                print("Their Github username is", github_user, "and SID is", sid, ".")
+                break
+            except:
+                print("error in _handler()...")
+
+
 
     def _accept_clients(self):
         """
         #TODO: Handle client connections to the server
         :return: VOID
         """
+        client_id = 0
         while True:
             try:
-               clienthandler, addr = self.serversocket.accept()
-               # TODO: from the addr variable, extract the client id assigned to the client
-               # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
-               self._handler(clienthandler) # receive, process, send response to client.
+                print("accepting...")
+                clienthandler, addr = self.serversocket.accept()
+                # TODO: from the addr variable, extract the client id assigned to the client
+                # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
+                client_id = addr[1]
+                self._send_clientid(clienthandler, client_id)
+                print("Welcome, client %s" % (str(client_id)))
+                self._handler(clienthandler)  # receive, process, send response to client.
             except:
-               # handle exceptions here
-               pass #remove this line after implemented.
+                self.serversocket.close()
+                print("Closing the socket. failure in accepting clients.")
+
 
     def _send_clientid(self, clienthandler, clientid):
         """
@@ -92,7 +117,9 @@ class Server(object):
         :param clientid:
         :return: VOID
         """
-        pass  # remove this line after implemented.
+        data = {'clientid': clientid}
+        self.send(clienthandler, data)
+        return None
 
 
     def send(self, clienthandler, data):
@@ -103,7 +130,9 @@ class Server(object):
         :param data: raw data (not serialized yet)
         :return: VOID
         """
-        pass #remove this line after implemented.
+        serialized_data = pickle.dumps(data)
+        clienthandler.send(serialized_data)
+        return None
 
     def receive(self, clienthandler, MAX_ALLOC_MEM=4096):
         """
@@ -111,7 +140,10 @@ class Server(object):
         :param MAX_ALLOC_MEM: default set to 4096
         :return: the deserialized data.
         """
-        return None #change the return value after implemente.
+        # print("Calling recv() on clientsocket... ")
+        data_from_client = clienthandler.recv(MAX_ALLOC_MEM)
+        data = pickle.loads(data_from_client)
+        return data
 
     def run(self):
         """

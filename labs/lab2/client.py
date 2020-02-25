@@ -49,13 +49,14 @@ class Client(object):
         # data dictionary already created for you. Don't modify.
         data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
 
-        while True: # client is put in listening mode to retrieve data from server.
+        while True:  # client is put in listening mode to retrieve data from server.
             try:
                 self.send(data)
                 data = self.receive()
                 if not data:
                     break
-                # do something with the data
+                print("Message from server: ", data['data'])
+                break
             except:
                 pass
         self.close()
@@ -100,8 +101,8 @@ class Client(object):
 
 # main execution
 if __name__ == '__main__':
-    server_ip_address = "10.143.97.180"  # TODO: change this to the server ip address provided by instructor in class
-    server_port = 5001
+    server_ip_address = "127.0.0.1"  # TODO: change this to the server ip address provided by instructor in class
+    server_port = 5112
     client = Client()
     client.connect(server_ip_address, server_port)
 
