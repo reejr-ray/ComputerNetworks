@@ -3,9 +3,9 @@
 # Date: 02/03/2020
 # Lab3: Server support for multiple clients
 # Goal: Learning Networking in Python with TCP sockets
-# Student Name:
-# Student ID:
-# Student Github Username:
+# Student Name: Raymond Rees Jr
+# Student ID: 918690921
+# Student Github Username: landsoul
 # Lab Instructions: No partial credit will be given. Labs must be completed in class, and must be committed to your
 #               personal repository by 9:45 pm.
 # Running instructions: This program needs the server to run. The server creates an object of this class.
