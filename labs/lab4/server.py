@@ -18,6 +18,7 @@
 import socket
 import pickle
 from threading import Thread
+from client_handler import ClientHandler
 
 class Server(object):
     """
@@ -87,7 +88,22 @@ class Server(object):
             except:
                 print("error in _handler()...")
 
+    def _send_clientid(self, clienthandler, clientid):
+        """
+        # TODO: send the client id to a client that just connected to the server.
+        :param clienthandler:
+        :param clientid:
+        :return: VOID
+        """
+        data = {'clientid': clientid}
+        serialized_data = pickle.dumps(data)
+        clienthandler.send(serialized_data)
+        return None
 
+    def thread_client(self, clienthandler, addr):
+        # init the client handler object
+        c = ClientHandler(self, clienthandler, addr)
+        c.process_client_data()
 
     def _accept_clients(self):
         """
@@ -97,53 +113,17 @@ class Server(object):
         client_id = 0
         while True:
             try:
-                print("accepting...")
+                # print("Server listening for new clients.")
                 clienthandler, addr = self.serversocket.accept()
                 # TODO: from the addr variable, extract the client id assigned to the client
                 # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
                 client_id = addr[1]
                 self._send_clientid(clienthandler, client_id)
-                print("Welcome, client %s" % (str(client_id)))
-                self._handler(clienthandler)  # receive, process, send response to client.
+                Thread(target=self.thread_client, args=(clienthandler, addr)).start()  # receive, process, send response to client.
+                print("Sending confirmation to client %s." % (str(client_id)))
             except:
                 self.serversocket.close()
                 print("Closing the socket. failure in accepting clients.")
-
-
-    def _send_clientid(self, clienthandler, clientid):
-        """
-        # TODO: send the client id to a client that just connected to the server.
-        :param clienthandler:
-        :param clientid:
-        :return: VOID
-        """
-        data = {'clientid': clientid}
-        self.send(clienthandler, data)
-        return None
-
-
-    def send(self, clienthandler, data):
-        """
-        # TODO: Serialize the data with pickle.
-        # TODO: call the send method from the clienthandler to send data
-        :param clienthandler: the clienthandler created when connection was accepted
-        :param data: raw data (not serialized yet)
-        :return: VOID
-        """
-        serialized_data = pickle.dumps(data)
-        clienthandler.send(serialized_data)
-        return None
-
-    def receive(self, clienthandler, MAX_ALLOC_MEM=4096):
-        """
-        # TODO: Deserialized the data from client
-        :param MAX_ALLOC_MEM: default set to 4096
-        :return: the deserialized data.
-        """
-        # print("Calling recv() on clientsocket... ")
-        data_from_client = clienthandler.recv(MAX_ALLOC_MEM)
-        data = pickle.loads(data_from_client)
-        return data
 
     def run(self):
         """
