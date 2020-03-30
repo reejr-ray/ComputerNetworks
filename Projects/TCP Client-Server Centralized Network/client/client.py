@@ -29,10 +29,24 @@ class Client(object):
         # The SOCK_STREAM means connection oriented TCP protocol.
         self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.clientid = 0
-        
+        self.client_id = 0
+        self.name = "Anonymous"
+
+    def getSelfInfo(self):
+        host = input('Enter the server IP Address:')
+        if host is None:
+            host = "127.0.0.1"
+        port = input('Enter the server port:')
+        if port is None:
+            port = 12000
+        self.name = input('Your id key (i.e your name):')
+        if self.name is None:
+            self.name = "Anonymous"
+        userData = {"host": host, "port": port, "name": self.name}
+        return userData
+
     def get_client_id(self):
-        return self.clientid
+        return self.client_id
 
     
     def connect(self, host="127.0.0.1", port=12000):
@@ -43,16 +57,43 @@ class Client(object):
         :param port: 
         :return: VOID
         """
-        pass
-		
-	
+        try:
+            self.clientSocket.connect((host, port))
+            data = self.receive()  # deserialized data
+            client_id = data['clientid']  # extracts client id from data
+            self.clientid = client_id  # sets the client id to this client
+            print("Successfully connected to server with IP: %s and port: %d" % (host, port))
+            print("Your client info is:")
+            print("Client Name:", self.name)
+            print("Client ID:", client_id)
+            print("Client id " + str(self.clientid) + " assigned by server")
+        except:
+            print('%s cannot connect to server %s/%d' % (self.name, host, port))
+
+        # data dictionary already created for you. Don't modify.
+        data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
+
+        while True:  # client is put in listening mode to retrieve data from server.
+            try:
+                self.send(data)
+                data = self.receive()
+                if not data:
+                    break
+                print("Message from server: ", data['data'])
+                break
+            except:
+                pass
+        self.close()
+
+
     def send(self, data):
         """
         TODO: Serializes and then sends data to server
         :param data:
         :return:
         """
-        pass
+        data = pickle.dumps(data)  # serialized data
+        self.clientSocket.send(data)
 
     def receive(self, MAX_BUFFER_SIZE=4090):
         """
@@ -60,7 +101,8 @@ class Client(object):
         :param MAX_BUFFER_SIZE: Max allowed allocated memory for this data
         :return: the deserialized data.
         """
-        return None
+        raw_data = self.clientSocket.recv(MAX_BUFFER_SIZE)  # deserializes the data from server
+        return pickle.loads(raw_data)
         
 
     def close(self):
@@ -68,10 +110,14 @@ class Client(object):
         TODO: close the client socket
         :return: VOID
         """
-        pass
+        try:
+            self.clientSocket.close()
+        except:
+            print('Error, the clientSocket cant close')
 
 		
 
 if __name__ == '__main__':
     client = Client()
-    client.connect()
+    data = client.getSelfInfo()  # returns a dictionary containing {ip adress, port, name}
+    client.connect(data["host"], data["port"])
