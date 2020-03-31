@@ -17,7 +17,7 @@
 class Menu(object):
     """
     This class handles all the actions related to the user menu.
-    An object of this class is serialized ans sent to the client side
+    An object of this class is serialized and sent to the client side
     then, the client sets to itself as owner of this menu to handle all
     the available options.
     Note that user interactions are only done between client and user.
@@ -31,6 +31,18 @@ class Menu(object):
         :param client: the client object on client side
         """
         self.client = client
+        # menu is now populated with the messages in a single list, easy to print and send.
+        self.menu = []
+        self.menu.append("****** TCP CHAT ******")
+        self.menu.append("-----------------------")
+        self.menu.append("Options Available:")
+        self.menu.append("1. Get user list")
+        self.menu.append("2. Sent a message")
+        self.menu.append("3. Get my messages")
+        self.menu.append("4. Create a new channel")
+        self.menu.append("5. Chat in a channel with your friends")
+        self.menu.append("6. Disconnect from server")
+
 
     def set_client(self, client):
         self.client = client
@@ -78,11 +90,13 @@ class Menu(object):
         4. Create a new channel
         5. Chat in a channel with your friends
         6. Disconnect from server
-        :return: a string representing the above menu.
+        :return: a list representing the above menu.
         """
-        menu = ""
         # TODO: implement your code here
-        return menu
+        # menu = ""
+        # for line in self.menu:
+        #    menu += line + ';'  # whole menu delimited by ;
+        return self.menu
 
     def option1(self):
         """

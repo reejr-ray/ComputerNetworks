@@ -56,10 +56,10 @@ class Client(object):
                 if not data:
                     break
                 print("Message from server: ", data['data'])
-                break
+                # break
             except:
                 pass
-        self.close()
+        # self.close()
 
     def send(self, data):
         """

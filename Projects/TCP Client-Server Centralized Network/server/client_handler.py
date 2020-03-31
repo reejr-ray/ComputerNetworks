@@ -30,7 +30,7 @@ class ClientHandler(object):
         self.server = server_instance
         self.clientsocket = clientsocket
         self.server.send_client_id(self.clientsocket, self.client_id)
-        self.unreaded_messages = []
+        self.unread_messages = []
 
     def _sendMenu(self):
         """
