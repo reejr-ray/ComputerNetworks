@@ -124,7 +124,7 @@ class Server(object):
         """
         self.send_client_id(clientsocket, address[1])
         # TODO: create a new client handler object and return it
-        handler = client_handler.ClientHandler(self.serversocket, clientsocket, address)
+        handler = client_handler.ClientHandler(self, clientsocket, address)
         return handler
 
     def run(self):

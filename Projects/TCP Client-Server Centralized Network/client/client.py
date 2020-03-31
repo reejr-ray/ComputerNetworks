@@ -33,13 +33,14 @@ class Client(object):
         self.name = "Anonymous"
 
     def getSelfInfo(self):
-        host = input('Enter the server IP Address:')
+        host = input('Enter the server IP Address: ')
         if host is None:
             host = "127.0.0.1"
-        port = input('Enter the server port:')
+        port = input('Enter the server port: ')
+        port = int(port)
         if port is None:
-            port = 12000
-        self.name = input('Your id key (i.e your name):')
+            port = 12005
+        self.name = input('Your id key (i.e your name): ')
         if self.name is None:
             self.name = "Anonymous"
         userData = {"host": host, "port": port, "name": self.name}
@@ -71,7 +72,8 @@ class Client(object):
             print('%s cannot connect to server %s/%d' % (self.name, host, port))
 
         # data dictionary already created for you. Don't modify.
-        data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
+        # data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
+        data = {'client_name': self.name, 'clientid': self.client_id}
 
         while True:  # client is put in listening mode to retrieve data from server.
             try:

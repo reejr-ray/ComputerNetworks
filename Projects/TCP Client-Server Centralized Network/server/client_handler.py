@@ -38,8 +38,8 @@ class ClientHandler(object):
         sends the menu options to the client after the handshake between client and server is done.
         :return: VOID
         """
-        menu = Menu()
-        data = {'menu': menu}
+        m = menu.get_menu()
+        data = {'menu': m}
         self.server.send(self.clientsocket, data)
 
     def process_options(self):
@@ -123,6 +123,11 @@ class ClientHandler(object):
         TODO: call delete_client_data() method, and then, disconnect this client from the server.
         :return: VOID
         """
+        try:
+            self.delete_client_data()
+            self.clientsocket.close()
+        except:
+            print("Error disconnecting client", self.client_id)
         pass
 
 

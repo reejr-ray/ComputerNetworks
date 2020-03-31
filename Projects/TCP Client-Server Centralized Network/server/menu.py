@@ -93,9 +93,9 @@ class Menu(object):
         :return: a list representing the above menu.
         """
         # TODO: implement your code here
-        # menu = ""
-        # for line in self.menu:
-        #    menu += line + ';'  # whole menu delimited by ;
+        menu = ""
+        for line in self.menu:
+            menu += line + '\n'  # whole menu delimited by
         return self.menu
 
     def option1(self):
