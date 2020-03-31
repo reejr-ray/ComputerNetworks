@@ -1,0 +1,11 @@
+Name: Raymond Rees Jr
+Student ID: 918690921
+
+- No External Libraries Used
+- No Python version or compatibility issues
+
+I cannot attach screenshots, as the imports for menu.py were not registering with my computer. It connects to the server, but as soon as client_handler is attempted to be created, python barfs. I don't know if this was caused by some corruption in the python version, or improper sys.PATH directing during installation (most likely this is the case). The most I can show is that it does connect to the server, but when it theoretically SHOULD recieve the menu in its formatted form, python says that get_menu() called in client_handler :
+
+Cannot find reference 'get_menu' in 'menu.py'
+
+The biggest challenge in the implementation of this project was the onset of depression due to the sudden change in setup, the inability to workout stress at a gym, and the requirement of being isolated from people I was used to seeing. I'm not saying that I deserve a better grade because of this, as these are all excuses. I should have sought help much earlier, and not tried to take everything on by myself. This is the consequence of my own actions, and I am deeply sorry for that. 
