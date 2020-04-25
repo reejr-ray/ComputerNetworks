@@ -93,8 +93,29 @@ best guess to solve this problem. You won't be penalized if you do not know the 
 you don't even try to provide an answer. 
 
 ### Your answer here
+The server is listening on the same port, so if that one port number is being taken already by another client, 
+any additional clients will not be able to connect. However, what if we weren't limited by the port number alone?
+A client has an IP address, so how we fix this problem lies in the pairing of 
 
+    IP address : port
+    200.78.0.1 : 12345 
+    
+If we take the specific ip and port of one client, that combination as an identifier, namely 
+ 
+    (200.78.0.1:12345)
+ 
+ will be what the server uses to establish a connection. Say for example P1 and P3's addresses are listed as follows:
+ 
+            122.4.7.0
+            12.165.1.179
+            
+ and both of them trying to connect to port 2000, which is the P2's server port. The resultant identifiers used would be
+ 
+             122.4.7.0:2000
+             12.165.1.179:2000
 
+since both identifiers are unique due to two different ip addresses, this should not cause conflicts, and a connection 
+should be made by both P1 and P3.
 
 
  
