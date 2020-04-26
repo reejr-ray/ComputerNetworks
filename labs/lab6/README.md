@@ -17,8 +17,11 @@ In this lab, your work is to explain in a few sentences how to make a trackerles
 
 ### Your response here. 
 
-
-
+Since the tracker's job is mainly to give each peer in the network the ip addresses of the other peers, it is possible to 
+keep this functionality without the need for a tracker. One way is by a Distributed Hash Table, or DHT for short. 
+On a torrent, an infohash can be provided as a key for this DHT, hashed with SHA-1 or similar cryptographic hash function. 
+This infohash would provide the new peer with a table of ip addresses, similar to what the tracker was doing in the first place, 
+but without a centralized location, as its associated with the torrent itself.
 
 
 
