@@ -54,4 +54,12 @@ class Peer (Server):
         :return: VOID
         """
         pass # your code here
+        for port in range(self.CLIENT_MIN_PORT_RANGE, self.CLIENT_MAX_PORT_RANGE + 1):
+            peer_address_increment = len(peers_ip_addresses) - 1  # sub 1 because we don't want to go over CLIENT_MAX_PORT_RANGE
+            peer_number = (port % 100) - 1  # port % 100 will return a number between 0-99
+            if port > (self.CLIENT_MIN_PORT_RANGE + peer_address_increment):
+                break
+            else:
+                self._connect_to_peer(port, peers_ip_addresses[peer_number])
+
 

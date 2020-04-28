@@ -10,6 +10,15 @@ class PWP(object):
     PSTR = "BitTorrent protocol"
     PSTRLEN = 19
     # TODO: Define ID constants for all the message fields such as unchoked, interested....
+    ID_CHOKE = 0
+    ID_UNCHOKE = 1
+    ID_INTERESTED = 2
+    ID_NOT_INTERESTED = 3
+    ID_HAVE = 4
+    ID_BITFIELD = 5
+    ID_REQUEST = 6
+    ID_PIECE = 7
+    ID_CANCEL = 8
 
     def __init__(self):
         """
