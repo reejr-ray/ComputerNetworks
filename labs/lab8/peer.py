@@ -38,7 +38,10 @@ class Peer (Server):
         :return: VOID
         """
         try:
-            pass # your code here
+            pass
+            # initiate a TCP client-server connection
+            # open a client socket
+            # have it bound to port, and listen on that port
         except:
             pass # handle exceptions here
 
@@ -60,6 +63,7 @@ class Peer (Server):
             if port > (self.CLIENT_MIN_PORT_RANGE + peer_address_increment):
                 break
             else:
+                # TODO thread this call
                 self._connect_to_peer(port, peers_ip_addresses[peer_number])
 
 
