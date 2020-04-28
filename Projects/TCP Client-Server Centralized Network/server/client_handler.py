@@ -25,12 +25,14 @@ class ClientHandler(object):
         :param clientsocket: the socket representing the client accepted in server side
         :param addr: addr[0] = <server ip address> and addr[1] = <client id>
         """
+        import menu
         self.server_ip = addr[0]
         self.client_id = addr[1]
         self.server = server_instance
         self.clientsocket = clientsocket
         self.server.send_client_id(self.clientsocket, self.client_id)
         self.unread_messages = []
+        self._sendMenu()
 
     def _sendMenu(self):
         """
@@ -38,6 +40,7 @@ class ClientHandler(object):
         sends the menu options to the client after the handshake between client and server is done.
         :return: VOID
         """
+        menu.
         m = menu.get_menu()
         data = {'menu': m}
         self.server.send(self.clientsocket, data)

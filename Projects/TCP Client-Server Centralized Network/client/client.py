@@ -81,7 +81,7 @@ class Client(object):
                 data = self.receive()
                 if not data:
                     break
-                print("Message from server: ", data['data'])
+                print(data['data'])
                 break
             except:
                 pass

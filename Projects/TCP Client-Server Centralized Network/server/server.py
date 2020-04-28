@@ -62,6 +62,7 @@ class Server(object):
 
     def thread_client(self, clientsocket, addr):
         handler = self.client_handler_thread(clientsocket, addr)
+        handler._sendMenu()
         # do something with the clienthandler
 
     def _accept_clients(self):

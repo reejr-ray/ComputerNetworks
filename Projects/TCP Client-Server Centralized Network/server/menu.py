@@ -43,7 +43,6 @@ class Menu(object):
         self.menu.append("5. Chat in a channel with your friends")
         self.menu.append("6. Disconnect from server")
 
-
     def set_client(self, client):
         self.client = client
 
@@ -93,10 +92,10 @@ class Menu(object):
         :return: a list representing the above menu.
         """
         # TODO: implement your code here
-        menu = ""
+        myMenu = ""
         for line in self.menu:
-            menu += line + '\n'  # whole menu delimited by
-        return self.menu
+            myMenu += line + '\n'  # whole menu delimited by
+        return myMenu
 
     def option1(self):
         """
