@@ -70,6 +70,8 @@ class Client(object):
             print("Client id " + str(self.clientid) + " assigned by server")
         except:
             print('%s cannot connect to server %s/%d' % (self.name, host, port))
+            self.close()
+            return
 
         # data dictionary already created for you. Don't modify.
         # data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
@@ -81,8 +83,7 @@ class Client(object):
                 data = self.receive()
                 if not data:
                     break
-                print(data['data'])
-                break
+                print(data['menu'])
             except:
                 pass
         self.close()

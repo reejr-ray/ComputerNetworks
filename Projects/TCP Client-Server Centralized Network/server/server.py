@@ -15,7 +15,7 @@ import socket
 from threading import Thread
 import pickle
 import client_handler
-import menu
+
 
 
 class Server(object):
