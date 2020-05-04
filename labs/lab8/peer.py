@@ -38,12 +38,17 @@ class Peer (Server):
         :return: VOID
         """
         try:
-            pass
+            client = Client()
+            client.bind(peer_ip_address, client_port_to_bind)
+            client.connect(peer_ip_address)
+            client.recv()
+            client_port_to_bind += 1
+
             # initiate a TCP client-server connection
             # open a client socket
             # have it bound to port, and listen on that port
         except:
-            pass # handle exceptions here
+            print("Uh Oh, Spaghettios")
 
     def connect(self, peers_ip_addresses):
         """
