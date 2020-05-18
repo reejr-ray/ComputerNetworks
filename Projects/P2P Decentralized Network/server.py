@@ -17,7 +17,8 @@
 # don't modify this imports.
 import socket
 import pickle
-from threading import Thread
+import threading
+from tracker import Tracker
 
 class Server(object):
     """
@@ -27,9 +28,9 @@ class Server(object):
     server must not be stopped when a exception occurs. A proper message needs to be show in the
     server console.
     """
-    MAX_NUM_CONN = 10 # keeps 10 clients in queue
+    MAX_NUM_CONN = 10  # keeps 10 clients in queue
 
-    def __init__(self, host="127.0.0.1", port = 12000):
+    def __init__(self, host="0.0.0.0", port=5000):
         """
         Class constructor
         :param host: by default localhost. Note that '0.0.0.0' takes LAN ip address.
@@ -37,14 +38,15 @@ class Server(object):
         """
         self.host = host
         self.port = port
-        self.serversocket = None # TODO: create the server socket
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TODO: create the server socket
+        self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def _bind(self):
         """
         # TODO: bind host and port to this server socket
         :return: VOID
         """
-        pass #remove this line after implemented.
+        self.serversocket.bind((self.host, self.port))
 
     def _listen(self):
         """
@@ -55,6 +57,8 @@ class Server(object):
         try:
             self._bind()
             # your code here
+            self.serversocket.listen(self.MAX_NUM_CONN)
+            print("Server listening at " + str(self.host) + "/" + str(self.port))
         except:
             self.serversocket.close()
 
@@ -68,7 +72,16 @@ class Server(object):
              # TODO: receive data from client
              # TODO: if no data, break the loop
              # TODO: Otherwise, send acknowledge to client. (i.e a message saying 'server got the data
-             pass  # remove this line after implemented.
+             try:
+                 data = self.receive(clienthandler)
+                 if data:
+                     print("Server got the data: " + str(data))
+                 else:
+                     break
+
+             except Exception as e:
+                 print("Error receving by server: " + str(e))
+                 break
 
     def _accept_clients(self):
         """
@@ -77,13 +90,20 @@ class Server(object):
         """
         while True:
             try:
-               clienthandler, addr = self.serversocket.accept()
-               # TODO: from the addr variable, extract the client id assigned to the client
-               # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
-               self._handler(clienthandler) # receive, process, send response to client.
-            except:
-               # handle exceptions here
-               pass #remove this line after implemented.
+                # TODO: from the addr variable, extract the client id assigned to the client
+                # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
+                clienthandler, addr = self.serversocket.accept()
+
+                client_id = addr[1]
+                #clienthandler.sendall
+                self._send_clientid(clienthandler, client_id)
+
+                self._handler(clienthandler) # receive, process, send response to client.
+
+            except Exception as e:
+                # handle exceptions here
+                print("Error in accepting client: " + str(e))
+                break
 
     def _send_clientid(self, clienthandler, clientid):
         """
@@ -92,7 +112,8 @@ class Server(object):
         :param clientid:
         :return: VOID
         """
-        pass  # remove this line after implemented.
+        client_id = {'clientid': clientid}
+        self.send(clienthandler, client_id)
 
 
     def send(self, clienthandler, data):
@@ -103,7 +124,8 @@ class Server(object):
         :param data: raw data (not serialized yet)
         :return: VOID
         """
-        pass #remove this line after implemented.
+        serialized_data = pickle.dumps(data)
+        clienthandler.send(serialized_data)
 
     def receive(self, clienthandler, MAX_ALLOC_MEM=4096):
         """
@@ -111,7 +133,10 @@ class Server(object):
         :param MAX_ALLOC_MEM: default set to 4096
         :return: the deserialized data.
         """
-        return None #change the return value after implemente.
+        r_data = clienthandler.recv(MAX_ALLOC_MEM)
+        deserializer = pickle.loads(r_data)
+
+        return deserializer
 
     def run(self):
         """
@@ -119,5 +144,11 @@ class Server(object):
         Run the server.
         :return: VOID
         """
-        self._listen()
-        self._accept_clients()
+        try:
+            print("number of active threads: ", threading.active_count())
+            self._listen()
+            self._accept_clients()
+        except KeyboardInterrupt:
+            print("stopped")
+        except:
+            print("error in server running")

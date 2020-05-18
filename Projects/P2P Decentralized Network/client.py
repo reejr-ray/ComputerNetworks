@@ -30,9 +30,9 @@ class Client(object):
         """
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_id = None
-        self.student_name = None # TODO: your name
-        self.github_username = None # TODO: your username
-        self.sid = 0 # TODO: your student id
+        self.student_name = "Ray Rees"
+        self.github_username = "reejr-ray"
+        self.sid = 918690921
 
     def connect(self, server_ip_address, server_port):
         """
@@ -50,10 +50,15 @@ class Client(object):
         data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
 
         #TODO  3. send the above data to the server. using the send method which has been already implemented for you.
+        self.client.connect((server_ip_address, server_port))
+        self.set_client_id()
 
         while True: # client is put in listening mode to retrieve data from server.
             data = self.receive()
-            if not data:
+            self.send(data)
+            if data:
+                print(data)
+            else:
                 break
             # do something with the data
         self.close()
@@ -91,3 +96,7 @@ class Client(object):
         TODO: close this client
         :return: VOID
         """
+        self.client.close()
+
+    def bind(self, ip, port):
+        self.client.bind((ip, port))
