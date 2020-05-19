@@ -11,12 +11,19 @@ class Tracker():
     def __init__(self, server_obj):
         self.server = server_obj
         self.peer_table = []
+        # find .torrent file
         dir = os.path.dirname(__file__)
         self.torrent_name = os.path.join(dir, 'torrents\\age.torrent')
+        # decode found torrent file using the path
         torrent_data = self.decode_torrent(self.torrent_name)
-        self.ip_port = torrent_data['announce'].split(":")
 
+        # info from the .torrent file
+        self.ip_port = torrent_data['announce'].split(":")
         announce_list = torrent_data['announce-list']
+        # print("announce: ", self.ip_port)
+        # print("announce_list: ", announce_list)
+
+
         for connection in announce_list:
             self.peer_table.append(socket.gethostbyname(socket.gethostname()))
 
@@ -42,17 +49,18 @@ class Tracker():
         print("broadcasting peer list")
         data = self.peer_table
         clienthandlers = self.peer_table
+
         try:
             for clients in clienthandlers:
-                print(clients)
-                self.server.send(clients, data[0])
-            #self.server.send(client, data)
+                print("client: ", clients)
+                self.server.send(client, data)
+            # self.server.send(client, data)
         except Exception as e:
             print("Error in broadcasting peer_list: " + str(e))
 
     def broadcast_not_send(self):
-        print("HELLO WORLDS")
-        print(self.peer_table)
+        print("This method should broadcast the peer list.")
+        print("Peer Table: ", self.peer_table)
 
     def decode_torrent(self, torrent_path):
         data = tp.parse_torrent_file(torrent_path)

@@ -9,6 +9,8 @@ import math
 import threading as thread
 from tracker import Tracker
 
+import uuid
+
 class Peer(Client, Server):
 
     DEFAULT_SERVER_PORT = 5000
@@ -23,7 +25,19 @@ class Peer(Client, Server):
         Server.__init__(self)
         self.client = Client()
         Client.__init__(self)
+        self.id = uuid.uuid4()
         self.clienthander_list = []
+
+    def run_server(self):
+        """
+        Already implemented. puts this peer to listen for connections requests from other peers
+        :return: VOID
+        """
+        try:
+            # must thread the server, otherwise it will block the main thread
+            thread.Thread(target=peer.server.run, daemon=True).start()
+        except Exception as error:
+            print(error)  # server failed to run
 
     def peer_client_connector(self, client_port_to_bind, peer_ip_address, peer_port=5000):
         print("\npeer_client_connector")
@@ -64,8 +78,8 @@ class Peer(Client, Server):
     def peer_threader(self, ip_addresses):
         try:
             print("running server")
+            self.run_server()
             print(thread.active_count())
-            thread.Thread(target=peer.server.run, daemon=True).start()
             print("connecting to all peers")
             self.connect_to_all_peers(ip_addresses)
 
@@ -78,10 +92,10 @@ if __name__ == '__main__':
     peer = Peer()
     tracker = Tracker(peer.server)
     ip_addresses = tracker.find_peers()
-    pwp = PWP(tracker.num_pieces)
-    peer.handshake_message = pwp.handshake(tracker.info_hash, id)
-
     print(ip_addresses)
     peer.peer_threader(ip_addresses)
 
-    tracker.broadcast_peer_list(peer)
+    tracker.broadcast_peer_list(peer.server)
+
+    pwp = PWP(tracker.num_pieces)
+    peer.handshake_message = pwp.handshake(tracker.info_hash, id)

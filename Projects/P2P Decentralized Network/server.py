@@ -3,9 +3,9 @@
 # Date: 02/03/2020
 # Lab3: TCP Server Socket
 # Goal: Learning Networking in Python with TCP sockets
-# Student Name:
-# Student ID:
-# Student Github Username:
+# Student Name: Raymond Rees Jr
+# Student ID: 918690921
+# Student Github Username: reejr-ray
 # Lab Instructions: No partial credit will be given. Labs must be completed in class, and must be committed to your
 #               personal repository by 9:45 pm.
 # Program Running instructions:
@@ -56,7 +56,6 @@ class Server(object):
         """
         try:
             self._bind()
-            # your code here
             self.serversocket.listen(self.MAX_NUM_CONN)
             print("Server listening at " + str(self.host) + "/" + str(self.port))
         except:
@@ -93,7 +92,6 @@ class Server(object):
                 # TODO: from the addr variable, extract the client id assigned to the client
                 # TODO: send assigned id to the new client. hint: call the send_clientid(..) method
                 clienthandler, addr = self.serversocket.accept()
-
                 client_id = addr[1]
                 #clienthandler.sendall
                 self._send_clientid(clienthandler, client_id)

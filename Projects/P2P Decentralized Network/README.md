@@ -2,12 +2,21 @@
 
 Please use this README file to provide the following documentation for this project:
 
-* Your name and student id
-* General description of the project (a few sentences)
+* Raymond Rees Jr.
+* This is a peer-to-peer network, or at least should be. The project creates peers and shares a file or set of files with one another. 
 * If you used external Python modules/libraries. Provide a requeriments.txt file  
 * Python version and compatibility issues (if any)
-* Clear and specific instructions about how to run your project. If your project does not run or contains errors, you'll get a 0 in the project no matter how much work you put on it. So, test your code properly and make sure that it runs without errors.
-* A few sentences about all the challenges you found during the implementation of this project and how you overcame them. Please be honest here. 
+* 1. install python 3.8
+  2. install wheel
+  3. install bitarray
+  4. install torrent_parser
+  5. navigate to the P2P Decentralized Network  folder
+  6. run peer.py
+* I started this project early, but a lot of the topics present in the P2P assignment are difficult to understand, and documentation on p2p networks in python are scarce. This forced me to try to create my own approach, which was a double edged sword. On one hand, this made me learn A TON of new concepts related to peer-to-peer networks, but also meant I spent the majority of my time testing out different data structures in separate .py files not part of this project. This is because I have a hard time using code without understanding exactly what it is doing. I have tests for threads, serversockets, clientsockets, ports, exceptions, etc... but my biggest struggle was because I failed to figure out how to integrate all of these ideas into one singular project. Most of my time in the P2P was spent researching how a bittorrent service is supposed to run, and to be honest, I still have some gaps which need to be patched by even more research. 
+
+The peer file runs, creates a tracker which decodes all info from the .torrent file, and parses that data into something more usable by the bittorrent protocol, such as num_pieces or the info_hash. It then threads the internalized server object, and attempts to assign client ids to each of the client threads, which succeeds. When I send data via the internalized server, the program just poops itself. :(
+
+anyways, thanks for an informative and fun semester as always. Please keep in touch! :)
 
 ## Note that failure to provide the above docs will result in a 30% deduction in your final grade for this project. 
 
