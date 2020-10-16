@@ -77,6 +77,9 @@ If a lab, project or EC is not set to done at grading time, it won't be graded. 
 
 * Each extra-credit project is 3% worth that will be added to your final grade. 
 
-* Extra-credit projects are all or nothing. No partial credit will be given. So, make sure that you plan accordely and understand the required project specifications before starting the implementation of one of them. 
+* Extra-credit projects are all or nothing. No partial credit will be given. So, make sure that you plan accordely and understand the required project specifications before starting the implementation of one of them.
+
+# Post-class note:
+
 All changes after October 15th are made from a purely academic standpoint. Base code was Created by Jose Costa, but may be changed in the future for a re-design. 
 
