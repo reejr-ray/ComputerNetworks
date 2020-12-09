@@ -1,15 +1,11 @@
 ########################################################################################################################
 # Class: Computer Networks
-# Date: 02/03/2020
+# Date: 12/01/2020
 # Lab3: TCP Client Socket
 # Goal: Learning Networking in Python with TCP sockets
-# Student Name:
-# Student ID:
-# Student Github Username:
-# Instructions: Read each problem carefully, and implement them correctly. Your grade in labs is based on passing
-#               all the unit tests provided.
-#               No partial credit will be given. Labs must be completed in class, and must be commited to your
-#               personal repository by 9:45 pm on iLearn.
+# Name: Raymond Rees Jr.
+# ID: 918690921
+# Github Username: reejr-ray
 ########################################################################################################################
 
 # don't modify this imports.
@@ -19,7 +15,7 @@ import pickle
 
 ######################################## Client Socket ###############################################################3
 """
-Client class that provides functionality to create a client socket is provided. Implement all the TODO parts 
+Client class that provides functionality to create a client socket is provided. Implement all the TODO parts
 """
 
 class Client(object):
@@ -31,7 +27,7 @@ class Client(object):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_id = None
         self.student_name = "Raymond Rees Jr"
-        self.github_username = "Landsoul"
+        self.github_username = "reejr-ray"
         self.sid = 918690921
 
     def connect(self, server_ip_address, server_port):
@@ -96,13 +92,13 @@ class Client(object):
         try:
             self.client.close()
         except:
-            print('Error, the client cant close')
+            print('Error, the client can\'t close')
 
 
 # main execution
 if __name__ == '__main__':
-    server_ip_address = "127.0.0.1"  # TODO: change this to the server ip address provided by instructor in class
-    server_port = 5112
+    server_ip_address = "127.0.0.1"
+    server_port = 12000
     client = Client()
     client.connect(server_ip_address, server_port)
 

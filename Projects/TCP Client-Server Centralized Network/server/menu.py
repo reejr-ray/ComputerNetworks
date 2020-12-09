@@ -1,10 +1,6 @@
 #######################################################################################
 # File:             menu.py
-# Author:           Jose Ortiz
-# Purpose:          CSC645 Assigment #1 TCP socket programming
-# Description:      Template Menu class. You are free to modify this
-#                   file to meet your own needs. Additionally, you are
-#                   free to drop this Menu class, and use a version of yours instead.
+# Author:           Raymond Rees Jr.
 # Important:        The server sends a object of this class to the client, so the client is
 #                   in charge of handling the menu. This behaivor is strictly necesary since
 #                   the client does not know which services the server provides until the
@@ -25,12 +21,12 @@ class Menu(object):
     data sent by the client, and send responses back.
     """
 
-    def __init__(self, client):
+    def __init__(self):
         """
         Class constractor
         :param client: the client object on client side
         """
-        self.client = client
+        # self.client = client
         # menu is now populated with the messages in a single list, easy to print and send.
         self.menu = []
         self.menu.append("****** TCP CHAT ******")
@@ -53,7 +49,8 @@ class Menu(object):
         TODO: 3. print the menu in client console.
         :return: VOID
         """
-        pass
+        print(self.get_menu())
+        return None
 
     def process_user_data(self):
         """

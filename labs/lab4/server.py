@@ -1,13 +1,11 @@
 ########################################################################################################################
 # Class: Computer Networks
-# Date: 02/03/2020
+# Date: 12/01/2020
 # Lab3: TCP Server Socket
 # Goal: Learning Networking in Python with TCP sockets
-# Student Name:
-# Student ID:
-# Student Github Username:
-# Lab Instructions: No partial credit will be given. Labs must be completed in class, and must be committed to your
-#               personal repository by 9:45 pm.
+# Name: Raymond Rees Jr.
+# ID: 918690921
+# Github Username: reejr-ray
 # Program Running instructions:
 #               python server.py  # compatible with python version 2
 #               python3 server.py # compatible with python version 3
@@ -30,7 +28,7 @@ class Server(object):
     """
     MAX_NUM_CONN = 10 # keeps 10 clients in queue
 
-    def __init__(self, host="127.0.0.1", port = 5112):
+    def __init__(self, host="127.0.0.1", port = 12000):
         """
         Class constructor
         :param host: by default localhost. Note that '0.0.0.0' takes LAN ip address.
@@ -38,7 +36,16 @@ class Server(object):
         """
         self.host = host
         self.port = port
-        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # TODO: create the server socket
+        # creates a server socket set in IPv4 mode, with
+        # SO_REUSEADDR enabled to allow IP/Ports to be reused.
+        self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        print("socket creation successful!")
+
+    def _close():
+        self.serversocket.shutdown(socket.SHUT_RDWR)
+        self.serversocket.close()
+        print("closed.")
 
     def _bind(self):
         """
@@ -46,6 +53,7 @@ class Server(object):
         :return: VOID
         """
         self.serversocket.bind((self.host, self.port))
+        print("Bind to %s / %d succeeded." % (self.host, self.port))
 
     def _listen(self):
         """
@@ -55,13 +63,13 @@ class Server(object):
         """
         try:
             self._bind()
-            print("Bind succeeded.")
             self.serversocket.listen(self.MAX_NUM_CONN)
-            print("Server is listening at %s/%d" % (self.host, self.port))
-        except:
-            self.serversocket.close()
-            print("closing socket. failure to listen.")
-            return None
+            print("Server is listening at %s / %d" % (self.host, self.port))
+        except KeyboardInterrupt:
+            print("[!] Keyboard Interrupted!")
+            self._close()
+        except Exception as e:
+            print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
 
     def _handler(self, clienthandler):
         """
@@ -85,8 +93,11 @@ class Server(object):
                 print("Student ", student_name, " has connected to the server.")
                 print("Their Github username is", github_user, "and SID is", sid, ".")
                 break
-            except:
-                print("error in _handler()...")
+            except KeyboardInterrupt:
+                 print("[!] Keyboard Interrupted!")
+                 self._close()
+            except Exception as e:
+                 print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
 
     def _send_clientid(self, clienthandler, clientid):
         """
@@ -121,9 +132,12 @@ class Server(object):
                 self._send_clientid(clienthandler, client_id)
                 Thread(target=self.thread_client, args=(clienthandler, addr)).start()  # receive, process, send response to client.
                 print("Sending confirmation to client %s." % (str(client_id)))
-            except:
-                self.serversocket.close()
-                print("Closing the socket. failure in accepting clients.")
+            except KeyboardInterrupt:
+                print("[!] Keyboard Interrupted!")
+                self._close()
+                break
+            except Exception as e:
+                print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
 
     def run(self):
         """

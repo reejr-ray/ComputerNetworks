@@ -30,9 +30,9 @@ class ClientHandler(object):
         self.client_id = addr[1]
         self.server = server_instance
         self.clientsocket = clientsocket
-        self.server.send_client_id(self.clientsocket, self.client_id)
+        # self.server.send_client_id(self.clientsocket, self.client_id)
         self.unread_messages = []
-        self.menu = menu.Menu(clientsocket)
+        # self.menu = menu.Menu(clientsocket)
         self._sendMenu()
 
     def _sendMenu(self):
@@ -41,7 +41,7 @@ class ClientHandler(object):
         sends the menu options to the client after the handshake between client and server is done.
         :return: VOID
         """
-        m = self.menu.get_menu()
+        m = menu.Menu()
         data = {'menu': m}
         self.server.send(self.clientsocket, data)
 
