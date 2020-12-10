@@ -1,16 +1,11 @@
 #######################################################################
 # File:             client.py
-# Author:           Jose Ortiz
-# Purpose:          CSC645 Assigment #1 TCP socket programming
-# Description:      Template client class. You are free to modify this
-#                   file to meet your own needs. Additionally, you are
-#                   free to drop this client class, and add yours instead.
+# Author:           Raymond Rees Jr.
 # Running:          Python 2: python client.py
 #                   Python 3: python3 client.py
 #
 ########################################################################
 import socket
-import io
 import pickle
 
 class Client(object):
@@ -34,18 +29,26 @@ class Client(object):
         self.host = None
         self.name = "Anonymous"
 
-    def getSelfInfo(self):
-        host = input('Enter the server IP Address: (default is 127.0.0.1)')
-        if host is None:
-            host = "127.0.0.1"
-        port = input('Enter the server port: (default is 12000)')
-        port = int(port)
-        if port is None:
-            port = 12000
+    def setSelfInfo(self):
+        """
+        Connection info input sanitizer
+        """
+        # TODO sanitize host to ensure x.x.x.x format. anything but this will crash raise exceptions atm.
+        self.host = input('Enter the server IP Address: (default is 127.0.0.1)')
+        if self.host is None or self.host == "":
+            self.host = "127.0.0.1"
+        self.port = input('Enter the server port: (default is 12000)')
+
+        if (self.port is None) or (self.port == "") or (not self.port.isnumeric()):
+            self.port = 12000
+        else:
+            self.port = int(port)
+
         self.name = input('Your id key (i.e your name): ')
-        if self.name is None:
+        if self.name is None or self.name == "":
             self.name = "Anonymous"
-        userData = {"host": host, "port": port, "name": self.name}
+
+        userData = {"host": self.host, "port": self.port, "name": self.name}
         return userData
 
     def get_client_id(self):
@@ -64,31 +67,32 @@ class Client(object):
             self.clientSocket.connect((host, port))
             data = self.receive()  # deserialized data
             client_id = data['clientid']  # extracts client id from data
-            self.clientid = client_id  # sets the client id to this client
+            self.client_id = client_id  # sets the client id to this client
             print("Successfully connected to server with IP: %s and port: %d" % (host, port))
             print("Your client info is:")
             print("Client Name: ", self.name)
             print("Client ID: ", client_id)
             print()
-        except:
-            print('%s cannot connect to server %s/%d' % (self.name, host, port))
+        except KeyboardInterrupt:
+            print("[!] Keyboard Interrupted!")
             self.close()
-            return
+        except Exception as e:
+            print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
 
         # data dictionary already created for you. Don't modify.
-        # data = {'student_name': self.student_name, 'github_username': self.github_username, 'sid': self.sid}
         data = {'client_name': self.name, 'clientid': self.client_id}
-
+#-------------------------- Main Loop --------------------
         while True:  # client is put in listening mode to retrieve data from server.
             try:
+                # send {client_name and ID} for server to recognize
                 self.send(data)
-                print("trying to recieve menu and use...")
                 data = self.receive()
-                print(data)
                 if not data:
                     break
-                menu = data["menu"]
-                menu.show_menu() # it works! :D
+                if 'menu' in data.keys():
+                    menu = data["menu"]
+                    menu.show_menu() # it works! :D
+                    menu.process_user_data()
             except KeyboardInterrupt:
                 print("\n[!] Keyboard Interrupted!")
                 self.close()
@@ -114,6 +118,13 @@ class Client(object):
         """
         try:
             raw_data = self.clientSocket.recv(MAX_BUFFER_SIZE)  # deserializes the data from server
+            # A lot is going on behind the scenes with the pickle module. In essence, it loads a stream
+            # of data into its original object for use by the class unpickling it.
+            # The biggest question is: How does the recieving class know:
+            # 1. What the object really is
+            # 2. What are its methods / class variables
+            # Pickle actually has an automatic import system that is (""""""almost"""""") syntactically
+            # equivalent to "import __object_pickled__"
             return pickle.loads(raw_data)
         except KeyboardInterrupt:
             print("\n[!] Keyboard Interrupted!")
@@ -165,5 +176,5 @@ class Client(object):
 
 if __name__ == '__main__':
     client = Client()
-    data = client.getSelfInfo()  # returns a dictionary containing {ip adress, port, name}
+    data = client.setSelfInfo()  # returns a dictionary containing {ip adress, port, name}
     client.connect(data["host"], data["port"])

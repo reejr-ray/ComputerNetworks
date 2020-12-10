@@ -30,7 +30,7 @@ class Server(object):
         # create an IPv4, STREAMing socket
         self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        print("Server socket created in IPv4, streaming mode.")
+        print("Server socket created in IPv4, sereaming mode.")
         print("SO_REUSEADDR enabled to allow IP/Ports to be reused.")
         self.clients = {}  # dictionary of clients handlers objects handling clients. format {clientid:client_handler_object}
         # bound to a port in _bind()
@@ -64,9 +64,11 @@ class Server(object):
             self._bind()
             self.serversocket.listen(self.MAX_NUM_CONN)
             print("Server is listening at %s/%d" % (self.host, self.port))
-        except:
-            self.serversocket.close()
-            print("Error setting socket to listen at %s/%d" % (self.host, self.port))
+        except KeyboardInterrupt:
+            print("[!] Keyboard Interrupted!")
+            self.close()
+        except Exception as e:
+            print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
 
     """
     Threaded Function with the purpose of listening for updates from the client via menu
@@ -74,9 +76,15 @@ class Server(object):
     :param addr:
     """
     def thread_client(self, clientsocket, addr):
-        handler = self.client_handler_thread(clientsocket, addr)
-        # handler._sendMenu()
-        # do something with the client socket
+        handler = self.assign_handler(clientsocket, addr)
+        # do something else with the client socket
+
+    def add_client(self, clienthandler):
+        # TODO append incoming client to the list of clients currently connected.
+        # store as {clientid : clienthandler} ?
+        if clienthandler.client_id not in self.clients.keys():
+            self.clients[clienthandler.client_id] = clienthandler
+
 
     def _accept_clients(self):
         """
@@ -90,6 +98,7 @@ class Server(object):
                 clienthandler, addr = self.serversocket.accept()
                 client_id = addr[1]
                 self.send_client_id(clienthandler, client_id)
+                # print("clienthandler: ", clienthandler, "\naddr:", addr)
                 # recieve, process, and send responses to client
                 Thread(target=self.thread_client, args=(clienthandler, addr)).start()
                 print("Sending confirmation of handshake to client %s." % (str(client_id)))
@@ -130,16 +139,14 @@ class Server(object):
         clientid = {'clientid': id}
         self.send(clientsocket, clientid)
 
-    def client_handler_thread(self, clientsocket, address):
+    def assign_handler(self, clientsocket, address):
         """
-        Sends the client id assigned to this clientsocket and
         Creates a new ClientHandler object
         See also ClientHandler Class
         :param clientsocket:
         :param address:
         :return: a client handler object.
         """
-        # self.send_client_id(clientsocket, address[1])
         handler = client_handler.ClientHandler(self, clientsocket, address)
         return handler
 

@@ -2,7 +2,7 @@
 # File:             menu.py
 # Author:           Raymond Rees Jr.
 # Important:        The server sends a object of this class to the client, so the client is
-#                   in charge of handling the menu. This behaivor is strictly necesary since
+#                   in charge of handling the menu. This behaivor is strictly neccessary since
 #                   the client does not know which services the server provides until the
 #                   clients creates a connection.
 # Running:          This class is dependent of other classes.
@@ -62,8 +62,9 @@ class Menu(object):
         option = self.option_selected()
         if 1 <= option <= 6: # validates a valid option
            # TODO: implement your code here
+           print("Yay, you made it here! I am proud of you. :)")
+
            # (i,e  algo: if option == 1, then data = self.menu.option1, then. send request to server with the data)
-           pass
 
     def option_selected(self):
         """
@@ -71,8 +72,24 @@ class Menu(object):
         :return: the option selected.
         """
         option = 0
-        # TODO: your code here.
-        return option
+        while True:
+            try:
+                option = input("Your option <enter a number> : ")
+                if option.isdigit():
+                    option = int(option)
+                    if 1 <= option <= 6:
+                        return option
+                    else:
+                        print("Invalid selection. Option must be an integer between 1 and 6")
+                else:
+                    print("Invalid selection. Option must be an integer")
+            except KeyboardInterrupt:
+                print("[!] Keyboard Interrupted!")
+                break
+            except Exception as e:
+                print("[!] {}:\n -  {}".format(type(e).__name__, str(e)))
+                break
+
 
     def get_menu(self):
         """
@@ -88,7 +105,6 @@ class Menu(object):
         6. Disconnect from server
         :return: a list representing the above menu.
         """
-        # TODO: implement your code here
         myMenu = ""
         for line in self.menu:
             myMenu += line + '\n'  # whole menu delimited by

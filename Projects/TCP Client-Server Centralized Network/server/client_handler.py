@@ -1,15 +1,12 @@
 #######################################################################
 # File:             client_handler.py
-# Author:           Jose Ortiz
-# Purpose:          CSC645 Assigment #1 TCP socket programming
-# Description:      Template ClientHandler class. You are free to modify this
-#                   file to meet your own needs. Additionally, you are
-#                   free to drop this client handler class, and use a version of yours instead.
+# Author:           Raymond Rees Jr.
 # Running:          Python 2: python server.py
 #                   Python 3: python3 server.py
 #                   Note: Must run the server before the client.
 ########################################################################
 import pickle
+import threading
 import menu
 
 class ClientHandler(object):
@@ -20,7 +17,6 @@ class ClientHandler(object):
     """
     def __init__(self, server_instance, clientsocket, addr):
         """
-        Class constructor already implemented for you
         :param server_instance: normally passed as self from server object
         :param clientsocket: the socket representing the client accepted in server side
         :param addr: addr[0] = <server ip address> and addr[1] = <client id>
@@ -28,16 +24,49 @@ class ClientHandler(object):
 
         self.server_ip = addr[0]
         self.client_id = addr[1]
+        self.client_name = ""
         self.server = server_instance
         self.clientsocket = clientsocket
-        # self.server.send_client_id(self.clientsocket, self.client_id)
         self.unread_messages = []
-        # self.menu = menu.Menu(clientsocket)
+
+        self.process_user_info()
+        lock = self.aquire_lock() # locks threads to print connection acknowledgement to the server
+        self.print_user_connect()
+        lock.release()
         self._sendMenu()
+
+    def process_user_info(self):
+        """
+        handles the initial user info.  __init__ helper class.
+        recvs client name and stores a new client object on the server. Needs a lock to prevent unwanted writes during
+        object creation.
+        """
+        data = self.server.receive(self.clientsocket) # listen for the client's login info
+        if 'client_name' in data.keys() and data['clientid'] == self.client_id: # make sure its the right data(and same sender)
+            self.client_name = data['client_name']
+        # add client to server list
+        self.server.add_client(self)
+        print(str(self.server.clients)) # works!
+
+    def aquire_lock(self):
+        """
+        This class is necessary whenever any read/write/print is done on the server.
+        use with methods print_user_connect, print_user_disconnect
+        :return: the lock created
+        """
+        lock = threading.Lock()
+        lock.acquire()
+        return lock
+
+    def print_user_connect(self):
+        print("Client %s:%s has successfully connected to the server." % (self.client_name, self.client_id))
+
+    def print_user_disconnect(self):
+        print("Client %s:%s has disconnected from the server." % (self.client_name, self.client_id))
+
 
     def _sendMenu(self):
         """
-        Already implemented for you.
         sends the menu options to the client after the handshake between client and server is done.
         :return: VOID
         """
@@ -49,7 +78,6 @@ class ClientHandler(object):
         """
         Process the option selected by the user and the data sent by the client related to that
         option. Note that validation of the option selected must be done in client and server.
-        In this method, I already implemented the server validation of the option selected.
         :return:
         """
         data = self.server.receive(self.clientsocket)
